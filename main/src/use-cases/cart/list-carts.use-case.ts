@@ -1,0 +1,20 @@
+import { Database } from 'bun:sqlite';
+
+import { getDatabase } from '@main/config/database';
+import { CartRepository } from '@main/db/repositories/cart.repository';
+
+import * as cartDomain from '@core/domain/cart';
+
+export class ListCartsUseCase {
+  private readonly repository: CartRepository;
+
+  constructor(db: Database = getDatabase()) {
+    this.repository = new CartRepository(db);
+  }
+
+  execute(): cartDomain.Cart$[] {
+    return this.repository.findAll();
+  }
+}
+
+
