@@ -1,0 +1,21 @@
+{
+  "name": "domain-application-hybrid-main",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "core:build": "cd ../core && bun run build",
+    "dev": "bun run core:build && bun run src/index.ts",
+    "build": "bun run core:build && bun build src/index.ts --outdir ./dist --target bun",
+    "test": "bun run core:build && bun test",
+    "test:e2e": "hurl --test test-e2e.hurl",
+    "test:e2e:verbose": "hurl --test --verbose test-e2e.hurl",
+    "db:migrate": "bun run src/db/migrate.ts"
+  },
+  "dependencies": {
+    "@core/domain": "file:../core",
+    "hono": "^4.0.0"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  }
+}
