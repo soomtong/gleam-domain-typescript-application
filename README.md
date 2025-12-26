@@ -1,24 +1,37 @@
-# 폴리글랏 모노레포 애플리케이션
+# Domain-Application Hybrid Architecture
 
-Clean Architecture 기반의 실험적 하이브리드 프로젝트입니다.
-- **Domain Layer**: Gleam (타입 안정성, Sum Types)
-- **Application/Infrastructure Layer**: TypeScript + Bun + Hono
+Clean Architecture 원칙을 기반으로 한 실험적 하이브리드 프로젝트입니다.
+
+**핵심 아이디어**: 도메인 로직은 강타입 함수형 언어로, 애플리케이션 레이어는 생산성 높은 언어로 분리
+
+- **Domain Layer** (Gleam): 타입 안정성, Sum Types, 불변성
+- **Application/Infrastructure Layer** (TypeScript + Bun): 빠른 개발, 풍부한 생태계
+
+이커머스 도메인(Product, Coupon, Cart, Order, Payment)을 구현하여 아키텍처를 검증합니다.
 
 ## 🏗️ 프로젝트 구조
 
 ```
-domain-application-hybrid/
+gleam-domain-typescript-application-hybrid/
+├── CLAUDE.md
+├── README.md
+├── setup.sh
 ├── core/                    # Domain Layer (Gleam)
 │   ├── src/
 │   │   ├── common.gleam     # DateTime 타입, 공통 유틸리티
+│   │   ├── common_ffi.mjs   # Gleam ↔ JavaScript FFI
 │   │   ├── product.gleam    # Product Aggregate
 │   │   ├── coupon.gleam     # Coupon Aggregate
 │   │   ├── cart.gleam       # Cart Aggregate
 │   │   ├── order.gleam      # Order Aggregate
 │   │   ├── payment.gleam    # Payment Aggregate
-│   │   └── domain_event.gleam  # Domain Events
+│   │   ├── domain_event.gleam     # Domain Events
+│   │   └── domain_event_ffi.mjs   # Domain Events FFI
 │   ├── test/                # Gleam unit tests
-│   └── build/               # Gleam 컴파일 출력 (JavaScript)
+│   ├── build/               # Gleam 컴파일 출력 (JavaScript)
+│   ├── gleam.toml
+│   ├── manifest.toml
+│   └── package.json
 │
 └── main/                    # Application/Infrastructure (TypeScript + Bun)
     ├── src/
@@ -26,11 +39,16 @@ domain-application-hybrid/
     │   ├── config/          # 설정 (DB 연결)
     │   ├── db/              # 데이터베이스 (스키마, Repository, 마이그레이션)
     │   ├── api/             # API Routes, DTO
-    │   ├── domain/          # Gleam 도메인 모델 래퍼
-    │   ├── use-cases/       # 복잡한 비즈니스 플로우 (Checkout 등)
-    │   └── types/           # TypeScript 타입 정의
+    │   │   ├── dto/
+    │   │   └── routes/
+    │   │       └── _shared/
+    │   ├── domain/          # 도메인 모델 래퍼
+    │   └── use-cases/       # 복잡한 비즈니스 플로우 (Checkout 등)
     ├── data/                # SQLite 데이터베이스
-    └── test-*.hurl          # API E2E 테스트 (hurl)
+    ├── test-*.hurl          # API E2E 테스트 (hurl)
+    ├── package.json
+    ├── tsconfig.json
+    └── bun.lock
 ```
 
 ## 🚀 시작하기
@@ -41,7 +59,22 @@ domain-application-hybrid/
 - [Bun](https://bun.sh/) >= 1.0.0
 - [hurl](https://hurl.dev/) (선택적, API 테스트용)
 
-### 설치 및 실행
+### Quick Start (자동 설정)
+
+```bash
+# 모든 설정을 자동으로 실행
+./setup.sh
+
+# 또는 bun 사용
+bun run setup
+
+# 개발 서버 시작
+bun run dev
+```
+
+서버가 `http://localhost:3000`에서 실행됩니다.
+
+### 수동 설정
 
 ```bash
 # 1. Gleam 도메인 레이어 빌드
@@ -59,20 +92,28 @@ bun run db:migrate
 bun dev
 ```
 
-서버가 `http://localhost:3000`에서 실행됩니다.
+## 🛠️ 개발 명령어
 
-### 개발 명령어
+### 루트 디렉토리 (편리한 스크립트)
+```bash
+bun run setup        # 전체 초기 설정 (Gleam 빌드 + 의존성 설치 + DB 마이그레이션)
+bun run dev          # 개발 서버 실행
+bun run build        # 프로덕션 빌드 (Gleam + TypeScript)
+bun run test         # 모든 테스트 실행 (Gleam + TypeScript)
+bun run test:e2e     # E2E 테스트 실행
+bun run db:reset     # 데이터베이스 초기화
+bun run format       # Gleam 코드 포맷팅
+```
 
-**Gleam (core/)**
+### Gleam (core/)
 ```bash
 cd core
-bun run build        # Gleam 컴파일 (package.json script)
-gleam build          # Gleam 컴파일 (직접 실행)
+gleam build          # Gleam 컴파일
 gleam test           # 유닛 테스트 실행
 gleam format         # 코드 포맷팅
 ```
 
-**TypeScript/Bun (main/)**
+### TypeScript/Bun (main/)
 ```bash
 cd main
 bun install          # 의존성 설치
@@ -375,22 +416,51 @@ Gleam 코드는 JavaScript로 컴파일되어 Bun 런타임에서 실행됩니�
 - `reconstitute()` 함수로 DB 데이터를 도메인 모델로 재구성 (유효성 검증 포함)
 - 모든 도메인 규칙은 Gleam 레이어에서 강제됨
 
-## 📚 다음 단계
+## 🎓 학습 포인트
 
-현재 구현된 API:
-- ✅ **Product API** - 완전 구현 (CRUD, 재고 관리)
-- ✅ **Coupon API** - 완전 구현 (생성, 조회, 할인 계산)
-- ✅ **Cart API** - 완전 구현 (생성, 쿠폰 적용, 수량 변경, 체크아웃)
-- ✅ **Order API** - 완전 구현 (생성, 확정, 취소, 완료)
-- ✅ **Payment API** - 완전 구현 (결제 처리, 실패, 환불)
-- ✅ **Checkout Use Case** - Cart → Order 플로우 (재고 감소, 쿠폰 적용, 트랜잭션)
+이 프로젝트는 다음을 실험하고 검증합니다:
 
-추가 가능한 기능:
-1. **전체 Checkout 플로우** - Cart → Order → Payment 완전 자동화
-2. **Integration Tests** - 전체 비즈니스 시나리오 통합 테스트
-3. **인증/인가** - JWT 기반 사용자 인증
-4. **이벤트 발행** - Domain Events 실제 발행 및 처리
-5. **재고 예약 시스템** - 장바구니 생성 시 재고 일시 예약
+### 1. 타입 안정성의 계층화
+- **Domain Layer**: Gleam의 강력한 타입 시스템으로 비즈니스 규칙 보호
+- **Application Layer**: TypeScript로 유연한 통합 및 API 제공
+- **경계**: `Result` 타입과 `reconstitute` 패턴으로 안전한 데이터 변환
+
+### 2. Sum Types의 실전 활용
+```gleam
+pub type OrderStatus {
+  Pending
+  Confirmed
+  Cancelled
+  Completed
+}
+```
+- 불가능한 상태를 컴파일 타임에 방지
+- 패턴 매칭으로 모든 케이스 강제 처리
+
+### 3. Clean Architecture의 실용적 구현
+- **의존성 규칙**: Domain → Application → Infrastructure
+- **Repository 패턴**: 도메인 모델 직접 반환 (DTO 변환 없음)
+- **Use Cases**: 복잡한 비즈니스 플로우 조율 (checkout-cart.use-case.ts)
+
+### 4. FFI (Foreign Function Interface)
+- Gleam ↔ JavaScript 연동 (`common_ffi.mjs`, `domain_event_ffi.mjs`)
+- 런타임 통합 (Bun에서 Gleam 코드 직접 실행)
+
+## 📚 현재 구현 상태
+
+### 완료된 기능
+- ✅ **5개 Aggregate** - Product, Coupon, Cart, Order, Payment
+- ✅ **Domain Events** - 10가지 이벤트 타입 정의
+- ✅ **REST API** - 26개 엔드포인트
+- ✅ **Checkout Use Case** - Cart → Order 플로우 (트랜잭션, 재고 감소, 쿠폰 적용)
+- ✅ **50개 E2E 테스트** - hurl 기반 API 테스트
+
+### 추가 가능한 기능
+1. **이벤트 발행 시스템** - Domain Events를 실제로 발행/구독
+2. **전체 주문 플로우** - Cart → Order → Payment 완전 자동화
+3. **재고 예약** - 장바구니 생성 시 재고 일시 예약
+4. **사용자 인증** - JWT 기반 인증/인가
+5. **GraphQL API** - REST 대신 GraphQL 엔드포인트 제공
 
 ## 🔗 관련 문서
 

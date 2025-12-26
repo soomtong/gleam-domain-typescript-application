@@ -12,7 +12,13 @@
     "resolveJsonModule": true,
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@core/domain/*": [
+        "../core/build/dev/javascript/domain_core/*.d.mts",
+        "../core/build/dev/javascript/gleam_stdlib/gleam/*.d.mts"
+      ]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
