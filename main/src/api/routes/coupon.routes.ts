@@ -2,18 +2,19 @@ import { Hono } from 'hono';
 import type { CalculateDiscountRequest, CreateCouponRequest, } from '../dto/coupon.dto';
 import { toCouponResponse } from '../dto/coupon.dto';
 import { handleRouteError } from './_shared/route-helpers';
-import { ListCouponsUseCase } from '@main/use-cases/coupon/list-coupons.use-case';
-import { ListActiveCouponsUseCase } from '@main/use-cases/coupon/list-active-coupons.use-case';
-import { GetCouponByCodeUseCase } from '@main/use-cases/coupon/get-coupon-by-code.use-case';
-import { CreateCouponUseCase } from '@main/use-cases/coupon/create-coupon.use-case';
-import { CalculateCouponDiscountUseCase } from '@main/use-cases/coupon/calculate-coupon-discount.use-case';
+import { ListCouponsUseCase } from '../../use-cases/coupon/list-coupons.use-case';
+import { ListActiveCouponsUseCase } from '../../use-cases/coupon/list-active-coupons.use-case';
+import { GetCouponByCodeUseCase } from '../../use-cases/coupon/get-coupon-by-code.use-case';
+import { CreateCouponUseCase } from '../../use-cases/coupon/create-coupon.use-case';
+import { CalculateCouponDiscountUseCase } from '../../use-cases/coupon/calculate-coupon-discount.use-case';
 
-const app = new Hono();
 const listCouponsUseCase = new ListCouponsUseCase();
 const listActiveCouponsUseCase = new ListActiveCouponsUseCase();
 const getCouponByCodeUseCase = new GetCouponByCodeUseCase();
 const createCouponUseCase = new CreateCouponUseCase();
 const calculateCouponDiscountUseCase = new CalculateCouponDiscountUseCase();
+
+const app = new Hono();
 
 // GET /coupons - 모든 쿠폰 조회
 app.get('/', (c) => {

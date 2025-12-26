@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'bun:test';
 
-import { createInMemoryDatabase } from '@main/use-cases/_test-helpers';
-import { NotFoundError } from '@main/use-cases/app-errors';
-import { DomainError, orderStatusToString, paymentStatusToString } from '@main/domain/core-domain';
+import { createInMemoryDatabase } from '../_test-helpers';
+import { NotFoundError } from '../app-errors';
+import { DomainError, orderStatusToString, paymentStatusToString } from '../../domain/core-domain';
 
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { OrderRepository } from '@main/db/repositories/order.repository';
-import { PaymentRepository } from '@main/db/repositories/payment.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
+import { CartRepository } from '../../db/repositories/cart.repository';
+import { OrderRepository } from '../../db/repositories/order.repository';
+import { PaymentRepository } from '../../db/repositories/payment.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
 
 import { CompletePaymentUseCase } from './complete-payment.use-case';
 import { FailPaymentUseCase } from './fail-payment.use-case';
@@ -30,15 +30,15 @@ function seedOrderAndPayment(db: any) {
     title: 'T',
     price: 100,
     stock: 10,
-    begin_at: '2000-01-01T00:00:00.000Z',
-    end_at: '2100-01-01T00:00:00.000Z',
+    begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+    end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
   });
   const cart = cartRepo.create({
     product_id: productDomain.product_id(product),
     coupon_id: null,
     quantity: 1,
-    expired_at: '2100-01-01T00:00:00.000Z',
-    keep_until: '2100-01-02T00:00:00.000Z',
+    expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+    keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
   });
   const order = orderRepo.create({
     cart_id: cartDomain.cart_id(cart),

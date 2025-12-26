@@ -1,11 +1,11 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { CouponRepository } from '@main/db/repositories/coupon.repository';
-import { ConflictError, ValidationError } from '@main/use-cases/app-errors';
-import { parseDateTimeToMillis } from '@main/use-cases/_datetime';
+import { getDatabase } from '../../config/database';
+import { CouponRepository } from '../../db/repositories/coupon.repository';
+import { ConflictError, ValidationError } from '../app-errors';
+import { parseDateTimeToMillis } from '../_datetime';
 
-import type { CreateCouponRequest } from '@main/api/dto/coupon.dto';
+import type { CreateCouponRequest } from '../../api/dto/coupon.dto';
 
 import * as couponDomain from '@core/domain/coupon';
 

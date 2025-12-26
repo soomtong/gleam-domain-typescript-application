@@ -1,8 +1,8 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'bun:test';
 import { Hono } from 'hono';
 
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
+import { CartRepository } from '../../db/repositories/cart.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
 
 import * as cartDomain from '@core/domain/cart';
 import * as productDomain from '@core/domain/product';
@@ -64,15 +64,15 @@ describe('order.routes', () => {
       title: 'T',
       price: 100,
       stock: 10,
-      begin_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2100-01-01T00:00:00.000Z',
+      begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+      end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
     });
     const cart = cartRepo.create({
       product_id: productDomain.product_id(product),
       coupon_id: null,
       quantity: 1,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     const createdRes = await jsonRequest('/orders', {
@@ -87,34 +87,40 @@ describe('order.routes', () => {
       },
     });
     expect(createdRes.status).toBe(201);
-    const createdBody = await createdRes.json();
+    const createdBody: any = await createdRes.json();
     expect(createdBody.success).toBe(true);
     const orderId = createdBody.data.order_id as number;
 
     const getRes = await request(`/orders/${orderId}`, { method: 'GET' });
     expect(getRes.status).toBe(200);
-    const getBody = await getRes.json();
+    const getBody: any = await getRes.json();
     expect(getBody.success).toBe(true);
     expect(getBody.data.order_id).toBe(orderId);
     expect(getBody.data.status).toBe('Pending');
 
     const confirmRes = await request(`/orders/${orderId}/confirm`, { method: 'POST' });
     expect(confirmRes.status).toBe(200);
-    const confirmBody = await confirmRes.json();
+    const confirmBody: any = await confirmRes.json();
     expect(confirmBody.success).toBe(true);
     expect(confirmBody.data.status).toBe('Confirmed');
 
     const completeRes = await request(`/orders/${orderId}/complete`, { method: 'POST' });
     expect(completeRes.status).toBe(200);
-    const completeBody = await completeRes.json();
+    const completeBody: any = await completeRes.json();
     expect(completeBody.success).toBe(true);
     expect(completeBody.data.status).toBe('Completed');
+
+    const cancelAfterCompleteRes = await request(`/orders/${orderId}/cancel`, { method: 'POST' });
+    expect(cancelAfterCompleteRes.status).toBe(400);
+    const cancelAfterCompleteBody: any = await cancelAfterCompleteRes.json();
+    expect(cancelAfterCompleteBody.success).toBe(false);
+    expect(cancelAfterCompleteBody.code).toBeUndefined();
   });
 
   it('GET /orders -> 200 list', async () => {
     const listRes = await request('/orders', { method: 'GET' });
     expect(listRes.status).toBe(200);
-    const listBody = await listRes.json();
+    const listBody: any = await listRes.json();
     expect(listBody.success).toBe(true);
     expect(Array.isArray(listBody.data)).toBe(true);
     expect(listBody.data.length).toBe(0);
@@ -129,15 +135,15 @@ describe('order.routes', () => {
       title: 'T',
       price: 100,
       stock: 10,
-      begin_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2100-01-01T00:00:00.000Z',
+      begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+      end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
     });
     const cart = cartRepo.create({
       product_id: productDomain.product_id(product),
       coupon_id: null,
       quantity: 1,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     const createdRes = await jsonRequest('/orders', {
@@ -151,12 +157,12 @@ describe('order.routes', () => {
         discount_amount: 0,
       },
     });
-    const createdBody = await createdRes.json();
+    const createdBody: any = await createdRes.json();
     const orderId = createdBody.data.order_id as number;
 
     const completeRes = await request(`/orders/${orderId}/complete`, { method: 'POST' });
     expect(completeRes.status).toBe(400);
-    const completeBody = await completeRes.json();
+    const completeBody: any = await completeRes.json();
     expect(completeBody.success).toBe(false);
     expect(completeBody.code).toBeUndefined();
   });
@@ -164,13 +170,13 @@ describe('order.routes', () => {
   it('returns validation/not-found errors with correct status/code', async () => {
     const invalidId = await request('/orders/abc', { method: 'GET' });
     expect(invalidId.status).toBe(400);
-    const invalidIdBody = await invalidId.json();
+    const invalidIdBody: any = await invalidId.json();
     expect(invalidIdBody.success).toBe(false);
     expect(invalidIdBody.code).toBe('VALIDATION_ERROR');
 
     const notFound = await request('/orders/9999', { method: 'GET' });
     expect(notFound.status).toBe(404);
-    const notFoundBody = await notFound.json();
+    const notFoundBody: any = await notFound.json();
     expect(notFoundBody.success).toBe(false);
     expect(notFoundBody.code).toBe('NOT_FOUND');
   });

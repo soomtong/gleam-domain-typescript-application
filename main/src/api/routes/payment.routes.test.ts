@@ -1,9 +1,9 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'bun:test';
 import { Hono } from 'hono';
 
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { OrderRepository } from '@main/db/repositories/order.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
+import { CartRepository } from '../../db/repositories/cart.repository';
+import { OrderRepository } from '../../db/repositories/order.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
 
 import * as cartDomain from '@core/domain/cart';
 import * as orderDomain from '@core/domain/order';
@@ -40,15 +40,15 @@ function seedOrder(db: any, status: 'Pending' | 'Confirmed') {
     title: 'T',
     price: 100,
     stock: 10,
-    begin_at: '2000-01-01T00:00:00.000Z',
-    end_at: '2100-01-01T00:00:00.000Z',
+    begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+    end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
   });
   const cart = cartRepo.create({
     product_id: productDomain.product_id(product),
     coupon_id: null,
     quantity: 1,
-    expired_at: '2100-01-01T00:00:00.000Z',
-    keep_until: '2100-01-02T00:00:00.000Z',
+    expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+    keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
   });
   const order = orderRepo.create({
     cart_id: cartDomain.cart_id(cart),
@@ -101,13 +101,13 @@ describe('payment.routes', () => {
       json: { order_id: orderId, amount: 100 },
     });
     expect(createdRes.status).toBe(201);
-    const createdBody = await createdRes.json();
+    const createdBody: any = await createdRes.json();
     expect(createdBody.success).toBe(true);
     const paymentId = createdBody.data.payment_id as number;
 
     const getRes = await request(`/payments/${paymentId}`, { method: 'GET' });
     expect(getRes.status).toBe(200);
-    const getBody = await getRes.json();
+    const getBody: any = await getRes.json();
     expect(getBody.success).toBe(true);
     expect(getBody.data.payment_id).toBe(paymentId);
     expect(getBody.data.order_id).toBe(orderId);
@@ -115,7 +115,7 @@ describe('payment.routes', () => {
 
     const listRes = await request('/payments', { method: 'GET' });
     expect(listRes.status).toBe(200);
-    const listBody = await listRes.json();
+    const listBody: any = await listRes.json();
     expect(listBody.success).toBe(true);
     expect(listBody.data.length).toBe(1);
   });
@@ -134,7 +134,7 @@ describe('payment.routes', () => {
       json: { order_id: confirmedOrderId, amount: 100 },
     });
     expect(conflict.status).toBe(409);
-    const conflictBody = await conflict.json();
+    const conflictBody: any = await conflict.json();
     expect(conflictBody.success).toBe(false);
     expect(conflictBody.code).toBe('CONFLICT');
 
@@ -143,7 +143,7 @@ describe('payment.routes', () => {
       json: { order_id: 9999, amount: 100 },
     });
     expect(notFound.status).toBe(404);
-    const notFoundBody = await notFound.json();
+    const notFoundBody: any = await notFound.json();
     expect(notFoundBody.success).toBe(false);
     expect(notFoundBody.code).toBe('NOT_FOUND');
 
@@ -153,7 +153,7 @@ describe('payment.routes', () => {
       json: { order_id: pendingOrderId, amount: 100 },
     });
     expect(notConfirmed.status).toBe(400);
-    const notConfirmedBody = await notConfirmed.json();
+    const notConfirmedBody: any = await notConfirmed.json();
     expect(notConfirmedBody.success).toBe(false);
     expect(notConfirmedBody.code).toBe('VALIDATION_ERROR');
   });
@@ -165,18 +165,24 @@ describe('payment.routes', () => {
       method: 'POST',
       json: { order_id: orderId, amount: 100 },
     });
-    const createdBody = await createdRes.json();
+    const createdBody: any = await createdRes.json();
     const paymentId = createdBody.data.payment_id as number;
+
+    const refundPendingRes = await request(`/payments/${paymentId}/refund`, { method: 'POST' });
+    expect(refundPendingRes.status).toBe(400);
+    const refundPendingBody: any = await refundPendingRes.json();
+    expect(refundPendingBody.success).toBe(false);
+    expect(refundPendingBody.code).toBeUndefined();
 
     const completeRes = await request(`/payments/${paymentId}/complete`, { method: 'POST' });
     expect(completeRes.status).toBe(200);
-    const completeBody = await completeRes.json();
+    const completeBody: any = await completeRes.json();
     expect(completeBody.success).toBe(true);
     expect(completeBody.data.status).toBe('Completed');
 
     const refundRes = await request(`/payments/${paymentId}/refund`, { method: 'POST' });
     expect(refundRes.status).toBe(200);
-    const refundBody = await refundRes.json();
+    const refundBody: any = await refundRes.json();
     expect(refundBody.success).toBe(true);
     expect(refundBody.data.status).toBe('Refunded');
   });
@@ -184,13 +190,13 @@ describe('payment.routes', () => {
   it('returns validation/not-found errors for id params', async () => {
     const invalidId = await request('/payments/abc', { method: 'GET' });
     expect(invalidId.status).toBe(400);
-    const invalidIdBody = await invalidId.json();
+    const invalidIdBody: any = await invalidId.json();
     expect(invalidIdBody.success).toBe(false);
     expect(invalidIdBody.code).toBe('VALIDATION_ERROR');
 
     const notFound = await request('/payments/9999', { method: 'GET' });
     expect(notFound.status).toBe(404);
-    const notFoundBody = await notFound.json();
+    const notFoundBody: any = await notFound.json();
     expect(notFoundBody.success).toBe(false);
     expect(notFoundBody.code).toBe('NOT_FOUND');
   });

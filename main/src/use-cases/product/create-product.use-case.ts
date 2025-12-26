@@ -1,11 +1,11 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { ProductRepository } from '@main/db/repositories/product.repository';
-import { ValidationError } from '@main/use-cases/app-errors';
-import { parseDateTimeToMillis } from '@main/use-cases/_datetime';
+import { getDatabase } from '../../config/database';
+import { ProductRepository } from '../../db/repositories/product.repository';
+import { ValidationError } from '../app-errors';
+import { parseDateTimeToMillis } from '../_datetime';
 
-import type { CreateProductRequest } from '@main/api/dto/product.dto';
+import type { CreateProductRequest } from '../../api/dto/product.dto';
 
 import * as productDomain from '@core/domain/product';
 

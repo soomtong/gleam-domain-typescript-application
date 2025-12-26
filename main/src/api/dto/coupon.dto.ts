@@ -45,10 +45,10 @@ export function toCouponResponse(coupon: Coupon): CouponResponse {
     code: couponDomain.code(coupon),
     discount_type: discountTypeToString(couponDomain.discount_type(coupon)),
     discount_value: discountValueFromDiscountType(couponDomain.discount_type(coupon)),
-    valid_from: couponDomain.valid_from(coupon),
-    valid_until: couponDomain.valid_until(coupon),
+    valid_from: new Date(couponDomain.valid_from(coupon)).toISOString(),
+    valid_until: new Date(couponDomain.valid_until(coupon)).toISOString(),
     status: couponStatusToString(couponDomain.status(coupon)),
-    created_at: couponDomain.created_at(coupon),
-    updated_at: couponDomain.updated_at(coupon),
+    created_at: new Date(couponDomain.created_at(coupon)).toISOString(),
+    updated_at: new Date(couponDomain.updated_at(coupon)).toISOString(),
   };
 }

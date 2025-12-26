@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'bun:test';
 
-import { createInMemoryDatabase } from '@main/use-cases/_test-helpers';
-import { CheckoutCartUseCase } from '@main/use-cases/checkout-cart.use-case';
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { CouponRepository } from '@main/db/repositories/coupon.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
-import { OrderRepository } from '@main/db/repositories/order.repository';
-import { DomainError, cartStatusToString, orderStatusToString } from '@main/domain/core-domain';
-import { NotFoundError } from '@main/use-cases/app-errors';
+import { createInMemoryDatabase } from './_test-helpers';
+import { CheckoutCartUseCase } from './checkout-cart.use-case';
+import { CartRepository } from '../db/repositories/cart.repository';
+import { CouponRepository } from '../db/repositories/coupon.repository';
+import { ProductRepository } from '../db/repositories/product.repository';
+import { OrderRepository } from '../db/repositories/order.repository';
+import { DomainError, cartStatusToString, orderStatusToString } from '../domain/core-domain';
+import { NotFoundError } from './app-errors';
 
 import * as cartDomain from '@core/domain/cart';
 import * as productDomain from '@core/domain/product';
@@ -25,16 +25,16 @@ describe('CheckoutCartUseCase', () => {
       title: 'T',
       price: 100,
       stock: 5,
-      begin_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2100-01-01T00:00:00.000Z',
+      begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+      end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
     });
 
     const cart = cartRepo.create({
       product_id: productDomain.product_id(product),
       coupon_id: null,
       quantity: 2,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     const useCase = new CheckoutCartUseCase(db);
@@ -77,16 +77,16 @@ describe('CheckoutCartUseCase', () => {
       title: 'T',
       price: 100,
       stock: 0,
-      begin_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2100-01-01T00:00:00.000Z',
+      begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+      end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
     });
 
     const cart = cartRepo.create({
       product_id: productDomain.product_id(product),
       coupon_id: null,
       quantity: 1,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     const useCase = new CheckoutCartUseCase(db);
@@ -103,8 +103,8 @@ describe('CheckoutCartUseCase', () => {
       title: 'T',
       price: 100,
       stock: 10,
-      begin_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2100-01-01T00:00:00.000Z',
+      begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+      end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
     });
 
     const now = Date.now();
@@ -112,16 +112,16 @@ describe('CheckoutCartUseCase', () => {
       code: 'EXPIRED',
       discount_type: 'Fixed',
       discount_value: 10,
-      valid_from: new Date(now - 2 * 24 * 60 * 60 * 1000).toISOString(),
-      valid_until: new Date(now - 24 * 60 * 60 * 1000).toISOString(),
+      valid_from: now - 2 * 24 * 60 * 60 * 1000,
+      valid_until: now - 24 * 60 * 60 * 1000,
     });
 
     const cartWithExpiredCoupon = cartRepo.create({
       product_id: productDomain.product_id(product),
       coupon_id: couponDomain.coupon_id(expiredCoupon),
       quantity: 1,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     const useCase = new CheckoutCartUseCase(db);
@@ -131,8 +131,8 @@ describe('CheckoutCartUseCase', () => {
       product_id: productDomain.product_id(product),
       coupon_id: couponDomain.coupon_id(expiredCoupon),
       quantity: 1,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     // FK 때문에 존재하지 않는 coupon_id로 cart 생성이 불가능하므로, 테스트에서만 coupon_id를 강제로 깨뜨려 NotFound 케이스를 재현한다.

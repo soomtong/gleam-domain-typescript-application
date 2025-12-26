@@ -33,10 +33,10 @@ export function toProductResponse(product: Product): ProductResponse {
     title: productDomain.title(product),
     price: productDomain.price(product),
     stock: productDomain.stock(product),
-    begin_at: productDomain.begin_at(product),
-    end_at: productDomain.end_at(product),
+    begin_at: new Date(productDomain.begin_at(product)).toISOString(),
+    end_at: new Date(productDomain.end_at(product)).toISOString(),
     status: productStatusToString(productDomain.status(product)),
-    created_at: productDomain.created_at(product),
-    updated_at: productDomain.updated_at(product),
+    created_at: new Date(productDomain.created_at(product)).toISOString(),
+    updated_at: new Date(productDomain.updated_at(product)).toISOString(),
   };
 }

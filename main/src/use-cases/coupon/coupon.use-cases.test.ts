@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'bun:test';
 
-import { createInMemoryDatabase } from '@main/use-cases/_test-helpers';
-import { ConflictError, NotFoundError, ValidationError } from '@main/use-cases/app-errors';
+import { createInMemoryDatabase } from '../_test-helpers';
+import { ConflictError, NotFoundError, ValidationError } from '../app-errors';
 
-import { CouponRepository } from '@main/db/repositories/coupon.repository';
+import { CouponRepository } from '../../db/repositories/coupon.repository';
 import { CreateCouponUseCase } from './create-coupon.use-case';
 import { GetCouponByCodeUseCase } from './get-coupon-by-code.use-case';
 import { ListActiveCouponsUseCase } from './list-active-coupons.use-case';
@@ -74,8 +74,8 @@ describe('Coupon use-cases', () => {
       code: 'P15',
       discount_type: 'Percentage',
       discount_value: 15,
-      valid_from: new Date(now - 24 * 60 * 60 * 1000).toISOString(),
-      valid_until: new Date(now + 24 * 60 * 60 * 1000).toISOString(),
+      valid_from: now - 24 * 60 * 60 * 1000,
+      valid_until: now + 24 * 60 * 60 * 1000,
     });
 
     const useCase = new GetCouponByCodeUseCase(db);

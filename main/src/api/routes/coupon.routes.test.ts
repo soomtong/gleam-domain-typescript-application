@@ -31,7 +31,7 @@ beforeAll(async () => {
 
   resetDatabase = () => {
     const db = getDatabase();
-    db.exec(`
+    db.run(`
       DELETE FROM payments;
       DELETE FROM orders;
       DELETE FROM carts;
@@ -49,24 +49,25 @@ beforeEach(() => resetDatabase());
 describe('coupon.routes', () => {
   it('POST /coupons -> 201, GET /coupons/:code -> 200, POST /coupons/:code/calculate -> 200', async () => {
     const now = Date.now();
+    const payload = {
+      code: 'P15',
+      discount_type: 'Percentage',
+      discount_value: 15,
+      valid_from: new Date(now - 24 * 60 * 60 * 1000).toISOString(),
+      valid_until: new Date(now + 24 * 60 * 60 * 1000).toISOString(),
+    };
     const createRes = await jsonRequest('/coupons', {
       method: 'POST',
-      json: {
-        code: 'P15',
-        discount_type: 'Percentage',
-        discount_value: 15,
-        valid_from: new Date(now - 24 * 60 * 60 * 1000).toISOString(),
-        valid_until: new Date(now + 24 * 60 * 60 * 1000).toISOString(),
-      },
+      json: payload,
     });
     expect(createRes.status).toBe(201);
-    const createBody = await createRes.json();
+    const createBody: any = await createRes.json();
     expect(createBody.success).toBe(true);
     expect(createBody.data.code).toBe('P15');
 
     const getRes = await request('/coupons/P15', { method: 'GET' });
     expect(getRes.status).toBe(200);
-    const getBody = await getRes.json();
+    const getBody: any = await getRes.json();
     expect(getBody.success).toBe(true);
     expect(getBody.data.code).toBe('P15');
 
@@ -75,12 +76,21 @@ describe('coupon.routes', () => {
       json: { original_price: 99 },
     });
     expect(calcRes.status).toBe(200);
-    const calcBody = await calcRes.json();
+    const calcBody: any = await calcRes.json();
     expect(calcBody.success).toBe(true);
     expect(calcBody.data.original_price).toBe(99);
     expect(calcBody.data.discount_amount).toBe(14);
     expect(calcBody.data.final_price).toBe(85);
     expect(calcBody.data.coupon_code).toBe('P15');
+
+    const duplicateRes = await jsonRequest('/coupons', {
+      method: 'POST',
+      json: payload,
+    });
+    expect(duplicateRes.status).toBe(409);
+    const duplicateBody: any = await duplicateRes.json();
+    expect(duplicateBody.success).toBe(false);
+    expect(duplicateBody.code).toBe('CONFLICT');
   });
 
   it('GET /coupons and GET /coupons/active reflect time-based status', async () => {
@@ -107,12 +117,12 @@ describe('coupon.routes', () => {
     });
 
     const listRes = await request('/coupons', { method: 'GET' });
-    const listBody = await listRes.json();
+    const listBody: any = await listRes.json();
     expect(listBody.success).toBe(true);
     expect(listBody.data.length).toBe(2);
 
     const activeRes = await request('/coupons/active', { method: 'GET' });
-    const activeBody = await activeRes.json();
+    const activeBody: any = await activeRes.json();
     expect(activeBody.success).toBe(true);
     expect(activeBody.data.map((c: any) => c.code)).toEqual(['ACTIVE']);
   });
@@ -120,7 +130,7 @@ describe('coupon.routes', () => {
   it('returns correct errors for missing coupon and invalid original_price', async () => {
     const missing = await request('/coupons/MISSING', { method: 'GET' });
     expect(missing.status).toBe(404);
-    const missingBody = await missing.json();
+    const missingBody: any = await missing.json();
     expect(missingBody.success).toBe(false);
     expect(missingBody.code).toBe('NOT_FOUND');
 
@@ -129,7 +139,7 @@ describe('coupon.routes', () => {
       json: { original_price: -1 },
     });
     expect(invalid.status).toBe(400);
-    const invalidBody = await invalid.json();
+    const invalidBody: any = await invalid.json();
     expect(invalidBody.success).toBe(false);
     expect(invalidBody.code).toBe('VALIDATION_ERROR');
   });

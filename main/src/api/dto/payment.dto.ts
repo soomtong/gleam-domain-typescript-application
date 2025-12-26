@@ -9,10 +9,6 @@ export interface CreatePaymentRequest {
   amount: number;
 }
 
-export interface UpdatePaymentStatusRequest {
-  status: PaymentStatusString;
-}
-
 // Response DTOs
 export interface PaymentResponse {
   payment_id: number;
@@ -29,10 +25,10 @@ export function toPaymentResponse(payment: Payment): PaymentResponse {
   return {
     payment_id: paymentDomain.payment_id(payment),
     order_id: paymentDomain.order_id(payment),
-    paid_at: paymentDomain.paid_at(payment),
+    paid_at: new Date(paymentDomain.paid_at(payment)).toISOString(),
     amount: paymentDomain.amount(payment),
     status: paymentStatusToString(paymentDomain.status(payment)),
-    created_at: paymentDomain.created_at(payment),
-    updated_at: paymentDomain.updated_at(payment),
+    created_at: new Date(paymentDomain.created_at(payment)).toISOString(),
+    updated_at: new Date(paymentDomain.updated_at(payment)).toISOString(),
   };
 }

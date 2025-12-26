@@ -1,11 +1,7 @@
 import { beforeAll, beforeEach, describe, expect, it } from 'bun:test';
 import { Hono } from 'hono';
-
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { CouponRepository } from '@main/db/repositories/coupon.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
-
-import * as cartDomain from '@core/domain/cart';
+import { CouponRepository } from '../../db/repositories/coupon.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
 import * as couponDomain from '@core/domain/coupon';
 import * as productDomain from '@core/domain/product';
 
@@ -86,13 +82,13 @@ describe('cart.routes', () => {
       },
     });
     expect(createdRes.status).toBe(201);
-    const createdBody = await createdRes.json();
+    const createdBody: any = await createdRes.json();
     expect(createdBody.success).toBe(true);
     const cartId = createdBody.data.cart_id as number;
 
     const getRes = await request(`/carts/${cartId}`, { method: 'GET' });
     expect(getRes.status).toBe(200);
-    const getBody = await getRes.json();
+    const getBody: any = await getRes.json();
     expect(getBody.success).toBe(true);
     expect(getBody.data.cart_id).toBe(cartId);
     expect(getBody.data.quantity).toBe(2);
@@ -102,7 +98,7 @@ describe('cart.routes', () => {
       json: { quantity: 1 },
     });
     expect(qtyRes.status).toBe(200);
-    const qtyBody = await qtyRes.json();
+    const qtyBody: any = await qtyRes.json();
     expect(qtyBody.success).toBe(true);
     expect(qtyBody.data.quantity).toBe(1);
 
@@ -111,13 +107,31 @@ describe('cart.routes', () => {
       json: { coupon_id: couponDomain.coupon_id(coupon) },
     });
     expect(couponRes.status).toBe(200);
-    const couponBody = await couponRes.json();
+    const couponBody: any = await couponRes.json();
     expect(couponBody.success).toBe(true);
     expect(couponBody.data.coupon_id).toBe(couponDomain.coupon_id(coupon));
 
+    const removedCouponRes = await jsonRequest(`/carts/${cartId}/coupon`, {
+      method: 'PATCH',
+      json: { coupon_id: null },
+    });
+    expect(removedCouponRes.status).toBe(200);
+    const removedCouponBody: any = await removedCouponRes.json();
+    expect(removedCouponBody.success).toBe(true);
+    expect(removedCouponBody.data.coupon_id).toBeNull();
+
+    const reAddedCouponRes = await jsonRequest(`/carts/${cartId}/coupon`, {
+      method: 'PATCH',
+      json: { coupon_id: couponDomain.coupon_id(coupon) },
+    });
+    expect(reAddedCouponRes.status).toBe(200);
+    const reAddedCouponBody: any = await reAddedCouponRes.json();
+    expect(reAddedCouponBody.success).toBe(true);
+    expect(reAddedCouponBody.data.coupon_id).toBe(couponDomain.coupon_id(coupon));
+
     const checkoutRes = await request(`/carts/${cartId}/checkout`, { method: 'POST' });
     expect(checkoutRes.status).toBe(201);
-    const checkoutBody = await checkoutRes.json();
+    const checkoutBody: any = await checkoutRes.json();
     expect(checkoutBody.success).toBe(true);
     expect(checkoutBody.data.cart_id).toBe(cartId);
     expect(checkoutBody.data.order_id).toBeGreaterThan(0);
@@ -141,8 +155,8 @@ describe('cart.routes', () => {
       json: {
         product_id: productDomain.product_id(product),
         quantity: 1,
-        expired_at: '2100-01-01T00:00:00.000Z',
-        keep_until: '2100-01-02T00:00:00.000Z',
+        expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+        keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
       },
     });
     await jsonRequest('/carts', {
@@ -150,18 +164,18 @@ describe('cart.routes', () => {
       json: {
         product_id: productDomain.product_id(product),
         quantity: 1,
-        expired_at: '2000-01-01T00:00:00.000Z',
-        keep_until: '2100-01-02T00:00:00.000Z',
+        expired_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+        keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
       },
     });
 
     const allRes = await request('/carts', { method: 'GET' });
-    const allBody = await allRes.json();
+    const allBody: any = await allRes.json();
     expect(allBody.success).toBe(true);
     expect(allBody.data.length).toBe(2);
 
     const activeRes = await request('/carts/active', { method: 'GET' });
-    const activeBody = await activeRes.json();
+    const activeBody: any = await activeRes.json();
     expect(activeBody.success).toBe(true);
     expect(activeBody.data.length).toBe(1);
     expect(activeBody.data[0].status).toBe('Active');
@@ -170,13 +184,13 @@ describe('cart.routes', () => {
   it('returns validation/not-found errors with correct status/code', async () => {
     const invalidId = await request('/carts/abc', { method: 'GET' });
     expect(invalidId.status).toBe(400);
-    const invalidIdBody = await invalidId.json();
+    const invalidIdBody: any = await invalidId.json();
     expect(invalidIdBody.success).toBe(false);
     expect(invalidIdBody.code).toBe('VALIDATION_ERROR');
 
     const notFound = await request('/carts/9999', { method: 'GET' });
     expect(notFound.status).toBe(404);
-    const notFoundBody = await notFound.json();
+    const notFoundBody: any = await notFound.json();
     expect(notFoundBody.success).toBe(false);
     expect(notFoundBody.code).toBe('NOT_FOUND');
 
@@ -188,7 +202,7 @@ describe('cart.routes', () => {
       },
     });
     expect(invalidCreate.status).toBe(400);
-    const invalidCreateBody = await invalidCreate.json();
+    const invalidCreateBody: any = await invalidCreate.json();
     expect(invalidCreateBody.success).toBe(false);
     expect(invalidCreateBody.code).toBe('VALIDATION_ERROR');
 
@@ -207,7 +221,7 @@ describe('cart.routes', () => {
       json: { product_id: productDomain.product_id(product), quantity: 2 },
     });
     expect(insufficientStock.status).toBe(400);
-    const insufficientStockBody = await insufficientStock.json();
+    const insufficientStockBody: any = await insufficientStock.json();
     expect(insufficientStockBody.success).toBe(false);
     expect(insufficientStockBody.code).toBe('VALIDATION_ERROR');
   });

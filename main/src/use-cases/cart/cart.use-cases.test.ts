@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'bun:test';
 
-import { createInMemoryDatabase } from '@main/use-cases/_test-helpers';
-import { NotFoundError, ValidationError } from '@main/use-cases/app-errors';
-import { cartStatusToString, nullableIntFromOption } from '@main/domain/core-domain';
+import { createInMemoryDatabase } from '../_test-helpers';
+import { NotFoundError, ValidationError } from '../app-errors';
+import { cartStatusToString, nullableIntFromOption } from '../../domain/core-domain';
 
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { CouponRepository } from '@main/db/repositories/coupon.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
+import { CartRepository } from '../../db/repositories/cart.repository';
+import { CouponRepository } from '../../db/repositories/coupon.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
 
 import { CreateCartUseCase } from './create-cart.use-case';
 import { GetCartUseCase } from './get-cart.use-case';

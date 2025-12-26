@@ -1,10 +1,10 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { OrderRepository } from '@main/db/repositories/order.repository';
-import { ValidationError } from '@main/use-cases/app-errors';
+import { getDatabase } from '../../config/database';
+import { OrderRepository } from '../../db/repositories/order.repository';
+import { ValidationError } from '../app-errors';
 
-import type { CreateOrderRequest } from '@main/api/dto/order.dto';
+import type { CreateOrderRequest } from '../../api/dto/order.dto';
 
 import * as orderDomain from '@core/domain/order';
 

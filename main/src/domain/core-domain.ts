@@ -180,5 +180,3 @@ export function paymentStatusToString(status: paymentDomain.PaymentStatus$): Pay
   if (status instanceof paymentDomain.Refunded) return 'Refunded';
   throw new Error('Unknown PaymentStatus');
 }
-
-

@@ -1,9 +1,9 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { CouponRepository } from '@main/db/repositories/coupon.repository';
-import { couponStatusToString } from '@main/domain/core-domain';
-import { NotFoundError, ValidationError } from '@main/use-cases/app-errors';
+import { getDatabase } from '../../config/database';
+import { CouponRepository } from '../../db/repositories/coupon.repository';
+import { couponStatusToString } from '../../domain/core-domain';
+import { NotFoundError, ValidationError } from '../app-errors';
 
 import * as couponDomain from '@core/domain/coupon';
 

@@ -13,10 +13,6 @@ export interface CreateOrderRequest {
   discount_amount: number;
 }
 
-export interface UpdateOrderStatusRequest {
-  status: OrderStatusString;
-}
-
 // Response DTOs
 export interface OrderResponse {
   order_id: number;
@@ -42,7 +38,7 @@ export function toOrderResponse(order: Order): OrderResponse {
     paid_amount: orderDomain.paid_amount(order),
     discount_amount: orderDomain.discount_amount(order),
     status: orderStatusToString(orderDomain.status(order)),
-    created_at: orderDomain.created_at(order),
-    updated_at: orderDomain.updated_at(order),
+    created_at: new Date(orderDomain.created_at(order)).toISOString(),
+    updated_at: new Date(orderDomain.updated_at(order)).toISOString(),
   };
 }

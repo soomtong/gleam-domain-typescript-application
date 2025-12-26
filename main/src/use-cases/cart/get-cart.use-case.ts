@@ -1,8 +1,8 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { NotFoundError } from '@main/use-cases/app-errors';
+import { getDatabase } from '../../config/database';
+import { CartRepository } from '../../db/repositories/cart.repository';
+import { NotFoundError } from '../app-errors';
 
 import * as cartDomain from '@core/domain/cart';
 

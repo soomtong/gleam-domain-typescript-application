@@ -2,20 +2,21 @@ import { Hono } from 'hono';
 import type { CreateOrderRequest } from '../dto/order.dto';
 import { toOrderResponse } from '../dto/order.dto';
 import { handleRouteError, parseIntParamOrThrow } from './_shared/route-helpers';
-import { ListOrdersUseCase } from '@main/use-cases/order/list-orders.use-case';
-import { GetOrderUseCase } from '@main/use-cases/order/get-order.use-case';
-import { CreateOrderUseCase } from '@main/use-cases/order/create-order.use-case';
-import { ConfirmOrderUseCase } from '@main/use-cases/order/confirm-order.use-case';
-import { CancelOrderUseCase } from '@main/use-cases/order/cancel-order.use-case';
-import { CompleteOrderUseCase } from '@main/use-cases/order/complete-order.use-case';
+import { ListOrdersUseCase } from '../../use-cases/order/list-orders.use-case';
+import { GetOrderUseCase } from '../../use-cases/order/get-order.use-case';
+import { CreateOrderUseCase } from '../../use-cases/order/create-order.use-case';
+import { ConfirmOrderUseCase } from '../../use-cases/order/confirm-order.use-case';
+import { CancelOrderUseCase } from '../../use-cases/order/cancel-order.use-case';
+import { CompleteOrderUseCase } from '../../use-cases/order/complete-order.use-case';
 
-const app = new Hono();
 const listOrdersUseCase = new ListOrdersUseCase();
 const getOrderUseCase = new GetOrderUseCase();
 const createOrderUseCase = new CreateOrderUseCase();
 const confirmOrderUseCase = new ConfirmOrderUseCase();
 const cancelOrderUseCase = new CancelOrderUseCase();
 const completeOrderUseCase = new CompleteOrderUseCase();
+
+const app = new Hono();
 
 // GET /orders - 모든 주문 조회
 app.get('/', (c) => {

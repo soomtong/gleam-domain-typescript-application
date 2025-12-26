@@ -7,7 +7,7 @@ export function createInMemoryDatabase(): Database {
   db.run('PRAGMA journal_mode = WAL');
 
   const schemaSql = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8');
-  db.exec(schemaSql);
+  db.run(schemaSql);
 
   return db;
 }

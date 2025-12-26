@@ -1,9 +1,9 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { PaymentRepository } from '@main/db/repositories/payment.repository';
-import { OrderRepository } from '@main/db/repositories/order.repository';
-import { NotFoundError } from '@main/use-cases/app-errors';
+import { getDatabase } from '../../config/database';
+import { PaymentRepository } from '../../db/repositories/payment.repository';
+import { OrderRepository } from '../../db/repositories/order.repository';
+import { NotFoundError } from '../app-errors';
 
 import * as paymentDomain from '@core/domain/payment';
 

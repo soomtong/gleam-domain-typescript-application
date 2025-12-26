@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'bun:test';
 
-import { createInMemoryDatabase } from '@main/use-cases/_test-helpers';
-import { NotFoundError, ValidationError } from '@main/use-cases/app-errors';
-import { productStatusToString } from '@main/domain/core-domain';
+import { createInMemoryDatabase } from '../_test-helpers';
+import { NotFoundError, ValidationError } from '../app-errors';
+import { productStatusToString } from '../../domain/core-domain';
 
-import { ProductRepository } from '@main/db/repositories/product.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
 import { CreateProductUseCase } from './create-product.use-case';
 import { GetProductUseCase } from './get-product.use-case';
 import { ListProductsUseCase } from './list-products.use-case';

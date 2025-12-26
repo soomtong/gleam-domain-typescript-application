@@ -1,14 +1,14 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
-import { CouponRepository } from '@main/db/repositories/coupon.repository';
-import { couponStatusToString } from '@main/domain/core-domain';
-import { NotFoundError, ValidationError } from '@main/use-cases/app-errors';
-import { parseDateTimeToMillis } from '@main/use-cases/_datetime';
+import { getDatabase } from '../../config/database';
+import { CartRepository } from '../../db/repositories/cart.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
+import { CouponRepository } from '../../db/repositories/coupon.repository';
+import { couponStatusToString } from '../../domain/core-domain';
+import { NotFoundError, ValidationError } from '../app-errors';
+import { parseDateTimeToMillis } from '../_datetime';
 
-import type { CreateCartRequest } from '@main/api/dto/cart.dto';
+import type { CreateCartRequest } from '../../api/dto/cart.dto';
 
 import * as couponDomain from '@core/domain/coupon';
 import * as productDomain from '@core/domain/product';

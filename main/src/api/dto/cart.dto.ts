@@ -37,10 +37,10 @@ export function toCartResponse(cart: Cart): CartResponse {
     product_id: cartDomain.product_id(cart),
     coupon_id: nullableIntFromOption(cartDomain.coupon_id(cart)),
     quantity: cartDomain.quantity(cart),
-    expired_at: cartDomain.expired_at(cart),
-    keep_until: cartDomain.keep_until(cart),
+    expired_at: new Date(cartDomain.expired_at(cart)).toISOString(),
+    keep_until: new Date(cartDomain.keep_until(cart)).toISOString(),
     status: cartStatusToString(cartDomain.status(cart)),
-    created_at: cartDomain.created_at(cart),
-    updated_at: cartDomain.updated_at(cart),
+    created_at: new Date(cartDomain.created_at(cart)).toISOString(),
+    updated_at: new Date(cartDomain.updated_at(cart)).toISOString(),
   };
 }

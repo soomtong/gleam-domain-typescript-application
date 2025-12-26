@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'bun:test';
 
-import { createInMemoryDatabase } from '@main/use-cases/_test-helpers';
-import { ConflictError, NotFoundError, ValidationError } from '@main/use-cases/app-errors';
-import { CreatePaymentUseCase } from '@main/use-cases/payment/create-payment.use-case';
+import { createInMemoryDatabase } from '../_test-helpers';
+import { ConflictError, NotFoundError, ValidationError } from '../app-errors';
+import { CreatePaymentUseCase } from './create-payment.use-case';
 
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { OrderRepository } from '@main/db/repositories/order.repository';
-import { PaymentRepository } from '@main/db/repositories/payment.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
+import { CartRepository } from '../../db/repositories/cart.repository';
+import { OrderRepository } from '../../db/repositories/order.repository';
+import { PaymentRepository } from '../../db/repositories/payment.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
 
 import * as cartDomain from '@core/domain/cart';
 import * as orderDomain from '@core/domain/order';
@@ -25,16 +25,16 @@ describe('CreatePaymentUseCase', () => {
       title: 'T',
       price: 100,
       stock: 10,
-      begin_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2100-01-01T00:00:00.000Z',
+      begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+      end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
     });
 
     const cart = cartRepo.create({
       product_id: productDomain.product_id(product),
       coupon_id: null,
       quantity: 1,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     const order = orderRepo.create({
@@ -72,16 +72,16 @@ describe('CreatePaymentUseCase', () => {
       title: 'T',
       price: 100,
       stock: 10,
-      begin_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2100-01-01T00:00:00.000Z',
+      begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+      end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
     });
 
     const cart = cartRepo.create({
       product_id: productDomain.product_id(product),
       coupon_id: null,
       quantity: 1,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     const order = orderRepo.create({
@@ -110,16 +110,16 @@ describe('CreatePaymentUseCase', () => {
       title: 'T',
       price: 100,
       stock: 10,
-      begin_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2100-01-01T00:00:00.000Z',
+      begin_at: new Date('2000-01-01T00:00:00.000Z').getTime(),
+      end_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
     });
 
     const cart = cartRepo.create({
       product_id: productDomain.product_id(product),
       coupon_id: null,
       quantity: 1,
-      expired_at: '2100-01-01T00:00:00.000Z',
-      keep_until: '2100-01-02T00:00:00.000Z',
+      expired_at: new Date('2100-01-01T00:00:00.000Z').getTime(),
+      keep_until: new Date('2100-01-02T00:00:00.000Z').getTime(),
     });
 
     const order = orderRepo.create({

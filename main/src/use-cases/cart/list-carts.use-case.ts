@@ -1,7 +1,7 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { CartRepository } from '@main/db/repositories/cart.repository';
+import { getDatabase } from '../../config/database';
+import { CartRepository } from '../../db/repositories/cart.repository';
 
 import * as cartDomain from '@core/domain/cart';
 

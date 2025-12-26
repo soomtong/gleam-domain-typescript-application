@@ -1,4 +1,4 @@
-import { ValidationError } from '@main/use-cases/app-errors';
+import { ValidationError } from './app-errors';
 
 export function parseDateTimeToMillis(value: unknown, fieldName: string): number {
   if (typeof value === 'number' && Number.isFinite(value) && value > 0) {

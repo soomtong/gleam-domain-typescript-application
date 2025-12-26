@@ -2,20 +2,21 @@ import { Hono } from 'hono';
 import type { CreatePaymentRequest } from '../dto/payment.dto';
 import { toPaymentResponse } from '../dto/payment.dto';
 import { handleRouteError, parseIntParamOrThrow } from './_shared/route-helpers';
-import { ListPaymentsUseCase } from '@main/use-cases/payment/list-payments.use-case';
-import { GetPaymentUseCase } from '@main/use-cases/payment/get-payment.use-case';
-import { CreatePaymentUseCase } from '@main/use-cases/payment/create-payment.use-case';
-import { CompletePaymentUseCase } from '@main/use-cases/payment/complete-payment.use-case';
-import { FailPaymentUseCase } from '@main/use-cases/payment/fail-payment.use-case';
-import { RefundPaymentUseCase } from '@main/use-cases/payment/refund-payment.use-case';
+import { ListPaymentsUseCase } from '../../use-cases/payment/list-payments.use-case';
+import { GetPaymentUseCase } from '../../use-cases/payment/get-payment.use-case';
+import { CreatePaymentUseCase } from '../../use-cases/payment/create-payment.use-case';
+import { CompletePaymentUseCase } from '../../use-cases/payment/complete-payment.use-case';
+import { FailPaymentUseCase } from '../../use-cases/payment/fail-payment.use-case';
+import { RefundPaymentUseCase } from '../../use-cases/payment/refund-payment.use-case';
 
-const app = new Hono();
 const listPaymentsUseCase = new ListPaymentsUseCase();
 const getPaymentUseCase = new GetPaymentUseCase();
 const createPaymentUseCase = new CreatePaymentUseCase();
 const completePaymentUseCase = new CompletePaymentUseCase();
 const failPaymentUseCase = new FailPaymentUseCase();
 const refundPaymentUseCase = new RefundPaymentUseCase();
+
+const app = new Hono();
 
 // GET /payments - 모든 결제 조회
 app.get('/', (c) => {

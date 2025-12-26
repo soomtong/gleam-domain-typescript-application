@@ -1,10 +1,10 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { ProductRepository } from '@main/db/repositories/product.repository';
-import { NotFoundError, ValidationError } from '@main/use-cases/app-errors';
+import { getDatabase } from '../../config/database';
+import { ProductRepository } from '../../db/repositories/product.repository';
+import { NotFoundError, ValidationError } from '../app-errors';
 
-import type { UpdateProductStockRequest } from '@main/api/dto/product.dto';
+import type { UpdateProductStockRequest } from '../../api/dto/product.dto';
 
 import * as productDomain from '@core/domain/product';
 

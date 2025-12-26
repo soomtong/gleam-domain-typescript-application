@@ -1,3 +1,5 @@
+import type { ContentfulStatusCode } from 'hono/utils/http-status';
+
 export type AppErrorCode =
   | 'VALIDATION_ERROR'
   | 'NOT_FOUND'
@@ -5,10 +7,10 @@ export type AppErrorCode =
   | 'INTERNAL_ERROR';
 
 export class AppError extends Error {
-  public readonly status: number;
+  public readonly status: ContentfulStatusCode;
   public readonly code: AppErrorCode;
 
-  constructor(params: { message: string; status: number; code: AppErrorCode; cause?: unknown }) {
+  constructor(params: { message: string; status: ContentfulStatusCode; code: AppErrorCode; cause?: unknown }) {
     super(params.message);
     this.status = params.status;
     this.code = params.code;

@@ -1,7 +1,7 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { PaymentRepository } from '@main/db/repositories/payment.repository';
+import { getDatabase } from '../../config/database';
+import { PaymentRepository } from '../../db/repositories/payment.repository';
 
 import * as paymentDomain from '@core/domain/payment';
 

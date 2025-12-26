@@ -1,11 +1,11 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { CartRepository } from '@main/db/repositories/cart.repository';
-import { ProductRepository } from '@main/db/repositories/product.repository';
-import { NotFoundError, ValidationError } from '@main/use-cases/app-errors';
+import { getDatabase } from '../../config/database';
+import { CartRepository } from '../../db/repositories/cart.repository';
+import { ProductRepository } from '../../db/repositories/product.repository';
+import { NotFoundError, ValidationError } from '../app-errors';
 
-import type { UpdateCartQuantityRequest } from '@main/api/dto/cart.dto';
+import type { UpdateCartQuantityRequest } from '../../api/dto/cart.dto';
 
 import * as cartDomain from '@core/domain/cart';
 import * as productDomain from '@core/domain/product';

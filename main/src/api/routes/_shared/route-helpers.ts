@@ -1,7 +1,7 @@
 import type { Context } from 'hono';
 
-import { DomainError } from '@main/domain/core-domain';
-import { isAppError, ValidationError } from '@main/use-cases/app-errors';
+import { DomainError } from '../../../domain/core-domain';
+import { isAppError, ValidationError } from '../../../use-cases/app-errors';
 
 export function parseIntParamOrThrow(c: Context, name: string): number {
   const rawValue = c.req.param(name);
@@ -10,15 +10,6 @@ export function parseIntParamOrThrow(c: Context, name: string): number {
     throw new ValidationError(`Invalid ${name}`);
   }
   return parsed;
-}
-
-export function parseIntOrThrow(value: unknown, fieldName: string): number {
-  if (typeof value === 'number' && Number.isInteger(value)) return value;
-  if (typeof value === 'string' && value.trim() !== '') {
-    const parsed = Number.parseInt(value, 10);
-    if (!Number.isNaN(parsed)) return parsed;
-  }
-  throw new ValidationError(`Invalid ${fieldName}`);
 }
 
 export function handleRouteError(c: Context, error: unknown) {

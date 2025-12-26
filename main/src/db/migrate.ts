@@ -18,7 +18,7 @@ async function migrate() {
     const schema = readFileSync(schemaPath, 'utf-8');
 
     // Execute schema
-    db.exec(schema);
+    db.run(schema);
 
     console.log('✅ Database migration completed successfully');
     closeDatabase();

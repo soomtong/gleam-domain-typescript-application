@@ -1,7 +1,7 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { ProductRepository } from '@main/db/repositories/product.repository';
+import { getDatabase } from '../../config/database';
+import { ProductRepository } from '../../db/repositories/product.repository';
 
 import * as productDomain from '@core/domain/product';
 

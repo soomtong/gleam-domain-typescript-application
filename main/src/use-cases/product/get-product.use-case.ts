@@ -1,8 +1,8 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { ProductRepository } from '@main/db/repositories/product.repository';
-import { NotFoundError } from '@main/use-cases/app-errors';
+import { getDatabase } from '../../config/database';
+import { ProductRepository } from '../../db/repositories/product.repository';
+import { NotFoundError } from '../app-errors';
 
 import * as productDomain from '@core/domain/product';
 

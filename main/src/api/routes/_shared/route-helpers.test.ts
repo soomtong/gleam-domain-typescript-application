@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'bun:test';
 
-import { DomainError } from '@main/domain/core-domain';
-import { ConflictError, NotFoundError, ValidationError } from '@main/use-cases/app-errors';
+import { DomainError } from '../../../domain/core-domain';
+import { ConflictError, NotFoundError, ValidationError } from '../../../use-cases/app-errors';
 import { handleRouteError } from './route-helpers';
 
 function createContextSpy() {

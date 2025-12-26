@@ -21,8 +21,8 @@ describe('Gleam domain integration (core)', () => {
         'Test product',
         100,
         1,
-        '2000-01-01T00:00:00.000Z',
-        '2100-01-01T00:00:00.000Z'
+        new Date('2000-01-01T00:00:00.000Z').getTime(),
+        new Date('2100-01-01T00:00:00.000Z').getTime()
       )
     );
 
@@ -41,8 +41,8 @@ describe('Gleam domain integration (core)', () => {
         'P15',
         new couponDomain.Percentage(15),
         15,
-        '2000-01-01T00:00:00.000Z',
-        '2100-01-01T00:00:00.000Z'
+        new Date('2000-01-01T00:00:00.000Z').getTime(),
+        new Date('2100-01-01T00:00:00.000Z').getTime()
       )
     );
 
@@ -54,8 +54,8 @@ describe('Gleam domain integration (core)', () => {
         'F150',
         new couponDomain.Fixed(150),
         150,
-        '2000-01-01T00:00:00.000Z',
-        '2100-01-01T00:00:00.000Z'
+        new Date('2000-01-01T00:00:00.000Z').getTime(),
+        new Date('2100-01-01T00:00:00.000Z').getTime()
       )
     );
 

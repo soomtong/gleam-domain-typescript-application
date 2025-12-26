@@ -2,16 +2,17 @@ import { Hono } from 'hono';
 import type { CreateProductRequest, UpdateProductStockRequest } from '../dto/product.dto';
 import { toProductResponse } from '../dto/product.dto';
 import { handleRouteError, parseIntParamOrThrow } from './_shared/route-helpers';
-import { ListProductsUseCase } from '@main/use-cases/product/list-products.use-case';
-import { GetProductUseCase } from '@main/use-cases/product/get-product.use-case';
-import { CreateProductUseCase } from '@main/use-cases/product/create-product.use-case';
-import { UpdateProductStockUseCase } from '@main/use-cases/product/update-product-stock.use-case';
+import { ListProductsUseCase } from '../../use-cases/product/list-products.use-case';
+import { GetProductUseCase } from '../../use-cases/product/get-product.use-case';
+import { CreateProductUseCase } from '../../use-cases/product/create-product.use-case';
+import { UpdateProductStockUseCase } from '../../use-cases/product/update-product-stock.use-case';
 
-const app = new Hono();
 const listProductsUseCase = new ListProductsUseCase();
 const getProductUseCase = new GetProductUseCase();
 const createProductUseCase = new CreateProductUseCase();
 const updateProductStockUseCase = new UpdateProductStockUseCase();
+
+const app = new Hono();
 
 // GET /products - 모든 상품 조회
 app.get('/', (c) => {

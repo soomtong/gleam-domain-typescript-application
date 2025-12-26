@@ -1,7 +1,7 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { CouponRepository } from '@main/db/repositories/coupon.repository';
+import { getDatabase } from '../../config/database';
+import { CouponRepository } from '../../db/repositories/coupon.repository';
 
 import * as couponDomain from '@core/domain/coupon';
 

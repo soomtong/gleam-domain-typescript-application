@@ -1,20 +1,14 @@
 import { Hono } from 'hono';
-import type {
-  CreateCartRequest,
-  UpdateCartCouponRequest,
-  UpdateCartQuantityRequest,
-} from '../dto/cart.dto';
+import type { CreateCartRequest, UpdateCartCouponRequest, UpdateCartQuantityRequest, } from '../dto/cart.dto';
 import { toCartResponse } from '../dto/cart.dto';
-import { CheckoutCartUseCase } from '@main/use-cases/checkout-cart.use-case';
+import { CheckoutCartUseCase } from '../../use-cases/cart/checkout-cart.use-case';
 import { handleRouteError, parseIntParamOrThrow } from './_shared/route-helpers';
-import { CreateCartUseCase } from '@main/use-cases/cart/create-cart.use-case';
-import { GetCartUseCase } from '@main/use-cases/cart/get-cart.use-case';
-import { ListCartsUseCase } from '@main/use-cases/cart/list-carts.use-case';
-import { ListActiveCartsUseCase } from '@main/use-cases/cart/list-active-carts.use-case';
-import { UpdateCartCouponUseCase } from '@main/use-cases/cart/update-cart-coupon.use-case';
-import { UpdateCartQuantityUseCase } from '@main/use-cases/cart/update-cart-quantity.use-case';
-
-const app = new Hono();
+import { CreateCartUseCase } from '../../use-cases/cart/create-cart.use-case';
+import { GetCartUseCase } from '../../use-cases/cart/get-cart.use-case';
+import { ListCartsUseCase } from '../../use-cases/cart/list-carts.use-case';
+import { ListActiveCartsUseCase } from '../../use-cases/cart/list-active-carts.use-case';
+import { UpdateCartCouponUseCase } from '../../use-cases/cart/update-cart-coupon.use-case';
+import { UpdateCartQuantityUseCase } from '../../use-cases/cart/update-cart-quantity.use-case';
 
 const checkoutUseCase = new CheckoutCartUseCase();
 const listCartsUseCase = new ListCartsUseCase();
@@ -23,6 +17,8 @@ const getCartUseCase = new GetCartUseCase();
 const createCartUseCase = new CreateCartUseCase();
 const updateCartCouponUseCase = new UpdateCartCouponUseCase();
 const updateCartQuantityUseCase = new UpdateCartQuantityUseCase();
+
+const app = new Hono();
 
 // GET /carts - 모든 장바구니 조회
 app.get('/', (c) => {

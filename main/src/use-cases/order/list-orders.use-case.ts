@@ -1,7 +1,7 @@
 import { Database } from 'bun:sqlite';
 
-import { getDatabase } from '@main/config/database';
-import { OrderRepository } from '@main/db/repositories/order.repository';
+import { getDatabase } from '../../config/database';
+import { OrderRepository } from '../../db/repositories/order.repository';
 
 import * as orderDomain from '@core/domain/order';
 
